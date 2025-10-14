@@ -1,7 +1,8 @@
 package org.example.shop.domain.model;
 
+import org.example.shop.domain.repository.MutableIdentifiable;
 
-public class CartItem {
+public class CartItem implements MutableIdentifiable<Integer> {
     private Integer id;
     private Integer productId;
     private int quantity;

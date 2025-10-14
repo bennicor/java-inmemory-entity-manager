@@ -1,11 +1,11 @@
 package org.example.shop.domain.model;
 
+import org.example.shop.domain.repository.MutableIdentifiable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class Order {
+public class Order implements MutableIdentifiable<Integer> {
     private Integer id;
     private Integer customerId;
     private LocalDateTime orderDate;

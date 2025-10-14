@@ -1,10 +1,10 @@
 package org.example.shop.domain.model;
 
+import org.example.shop.domain.repository.MutableIdentifiable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class Cart {
+public class Cart implements MutableIdentifiable<Integer> {
     private Integer id;
     private Integer customerId;
     private List<CartItem> items = new ArrayList<>();
