@@ -1,0 +1,14 @@
+package org.example.shop.infrastructure.repository;
+
+import org.example.shop.domain.model.Product;
+import org.example.shop.domain.repository.ProductRepository;
+import java.util.Optional;
+import java.util.Objects;
+
+public class InMemoryProductRepository extends InMemoryGenericRepository<Product>
+        implements ProductRepository {
+    @Override
+    public Optional<Product> findByCode(String code) {
+        return findAll().stream().filter(p -> Objects.equals(p.getCode(), code)).findFirst();
+    }
+}
