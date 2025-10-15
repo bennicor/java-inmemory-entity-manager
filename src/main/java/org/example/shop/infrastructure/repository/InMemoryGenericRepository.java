@@ -15,12 +15,12 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
     private int currentId = 1;
 
     @Override
-    public Integer save(T entity) {
+    public T save(T entity) {
         if (entity.getId() == null) {
             entity.setId(currentId++);
         }
         storage.put(entity.getId(), entity);
-        return entity.getId();
+        return entity;
     }
 
     @Override public Optional<T> findById(Integer id) { return Optional.ofNullable(storage.get(id)); }
