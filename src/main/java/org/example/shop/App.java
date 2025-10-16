@@ -21,6 +21,8 @@ public class App {
     public static void main(String[] args) {
         Context ctx = getContext();
 
+        populateWithTestData(ctx);
+
         ProductMenu productMenu = new ProductMenu();
         CustomerMenu customerMenu = new CustomerMenu();
         CartMenu cartMenu = new CartMenu();
@@ -82,6 +84,26 @@ public class App {
                 System.out.println("Неизвестно. Используйте 'open <n>', 'back', 'exit'.");
             }
         }
+    }
+
+    private static void populateWithTestData
+            (Context ctx) {
+        ctx.products.create("P001", "Phone", 299.99f, 0.3f, 0, 0, 0, "phone");
+        ctx.products.create("P002", "Laptop", 799.99f, 2.3f, 0, 0, 0, "laptop");
+        ctx.products.create("P003", "Tablet", 199.99f, 2.5f, 0, 0, 0, "Its tablet time");
+        ctx.products.create("P004", "Headphones", 59.99f, 1.4f, 0, 0, 0, "Its music time");
+
+        ctx.customers.create("Ivanov", "Ivan", "Ivanovich", "123 Main St", "123456789", "ivanov@email.com");
+        ctx.customers.create("Petrov", "Petr", "Petrovich", "456 Second St", "987654321", "petrov@email.com");
+
+        ctx.carts.add(1, 1, 2);
+        ctx.carts.add(1, 2, 7);
+        ctx.carts.add(1, 3, 4);
+        ctx.carts.add(2, 4, 1);
+        ctx.carts.add(2, 1, 2);
+
+        ctx.orders.createOrderFromCart(1, 20.00f, "CARD");
+        ctx.orders.createOrderFromCart(2, 27.00f, "CASH");
     }
 
     private static Context getContext() {

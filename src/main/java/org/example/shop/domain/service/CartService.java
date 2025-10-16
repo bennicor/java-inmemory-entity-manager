@@ -2,7 +2,6 @@ package org.example.shop.domain.service;
 
 import org.example.shop.domain.model.Cart;
 import org.example.shop.domain.model.CartItem;
-import org.example.shop.domain.model.Product;
 import org.example.shop.domain.repository.CartRepository;
 import org.example.shop.domain.repository.ProductRepository;
 
