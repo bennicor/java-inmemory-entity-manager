@@ -26,13 +26,13 @@ public final class OrderPrinter {
         for (OrderItem it : o.getItems()) {
             double lineTotal = it.getUnitPrice() * it.getQuantity();
             subtotal = subtotal + lineTotal;
-            System.out.printf("  * ID = %d | ID товара = %d | \"%s\" | Количество = %d | Стоимость = %s | Подытог = %s%n",
+            System.out.printf("  * ID = %d | ID товара = %d | \"%s\" | Количество = %d | Стоимость = %s | Подытог = %.3f%n",
                     it.getId(), it.getProductId(), it.getProductNameSnapshot(),
                     it.getQuantity(), it.getUnitPrice(), it.getUnitPrice() * it.getQuantity());
         }
-        System.out.println("  Стоимость без доставки = " + subtotal);
-        System.out.println("  Стоимость доставки = " + o.getDeliveryCost());
-        System.out.println("  Итог = " + (subtotal + o.getDeliveryCost()));
+        System.out.printf("  Стоимость без доставки = %.3f\n", subtotal);
+        System.out.printf("  Стоимость доставки = %.3f\n", o.getDeliveryCost());
+        System.out.printf("  Итог = %.3f\n", (subtotal + o.getDeliveryCost()));
     }
 
     public static void printBrief(Order o) {
