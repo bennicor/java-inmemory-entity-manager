@@ -10,29 +10,26 @@ public class Order implements MutableIdentifiable<Integer> {
     private Integer id;
     private Integer customerId;
     private LocalDateTime orderDate;
-    private Float totalPrice;
     private Float deliveryCost;
     private String paymentMethod;
     private String status;
     private List<OrderItem> items = new ArrayList<>();
 
-    public Order(Integer id, Integer customerId, LocalDateTime orderDate, Float totalPrice,
+    public Order(Integer id, Integer customerId, LocalDateTime orderDate,
                  Float deliveryCost, String paymentMethod, String status, List<OrderItem> items) {
         this.id = id;
         this.customerId = customerId;
         this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
         this.deliveryCost = deliveryCost;
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.items = items;
     }
 
-    public Order(Integer customerId, LocalDateTime orderDate, Float totalPrice,
+    public Order(Integer customerId, LocalDateTime orderDate,
                  Float deliveryCost, String paymentMethod, String status, List<OrderItem> items) {
         this.customerId = customerId;
         this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
         this.deliveryCost = deliveryCost;
         this.paymentMethod = paymentMethod;
         this.status = status;
@@ -64,14 +61,6 @@ public class Order implements MutableIdentifiable<Integer> {
 
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
-    }
-
-    public Float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Float totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public Float getDeliveryCost() {

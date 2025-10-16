@@ -54,14 +54,13 @@ public class OrderService {
         order.setStatus("NEW");
 
         List<OrderItem> items = new ArrayList<>();
-        Float totalOrderPrice = 0f;
         for (CartItem ci : cart.getItems()) {
-            Product p = products.findById(ci.getProductId())
-                    .orElseThrow(() -> new NoSuchElementException("product not found: " + ci.getProductId()));
-
             if (ci.getQuantity() <= 0) {
                 continue;
             }
+
+            Product p = products.findById(ci.getProductId())
+                    .orElseThrow(() -> new NoSuchElementException("product not found: " + ci.getProductId()));
 
             OrderItem oi = new OrderItem();
             oi.setProductId(p.getId());
@@ -69,8 +68,6 @@ public class OrderService {
             oi.setUnitPrice(p.getPrice());
             oi.setQuantity(ci.getQuantity());
             items.add(oi);
-
-            totalOrderPrice += p.getPrice();
         }
 
         cart.getItems().clear();
@@ -81,8 +78,6 @@ public class OrderService {
         }
 
         order.setItems(items);
-        order.setTotalPrice(totalOrderPrice);
-
         return orders.save(order);
     }
 
