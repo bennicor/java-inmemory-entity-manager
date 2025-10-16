@@ -1,13 +1,9 @@
 package org.example.shop.infrastructure.repository;
 
-import org.example.shop.domain.repository.MutableIdentifiable;
 import org.example.shop.domain.repository.CrudRepository;
+import org.example.shop.domain.repository.MutableIdentifiable;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
         implements CrudRepository<T, Integer> {
@@ -23,10 +19,33 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
         return entity;
     }
 
-    @Override public Optional<T> findById(Integer id) { return Optional.ofNullable(storage.get(id)); }
-    @Override public List<T> findAll() { return new ArrayList<>(storage.values()); }
-    @Override public boolean exists(Integer id) { return storage.containsKey(id); }
-    @Override public void deleteById(Integer id) { storage.remove(id); }
-    @Override public void deleteAll() { storage.clear(); }
-    @Override public int count() { return storage.size(); }
+    @Override
+    public Optional<T> findById(Integer id) {
+        return Optional.ofNullable(storage.get(id));
+    }
+
+    @Override
+    public List<T> findAll() {
+        return new ArrayList<>(storage.values());
+    }
+
+    @Override
+    public boolean exists(Integer id) {
+        return storage.containsKey(id);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        storage.remove(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        storage.clear();
+    }
+
+    @Override
+    public int count() {
+        return storage.size();
+    }
 }

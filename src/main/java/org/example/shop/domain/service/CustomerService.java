@@ -1,10 +1,10 @@
 package org.example.shop.domain.service;
 
-import org.example.shop.domain.repository.CustomerRepository;
 import org.example.shop.domain.model.Customer;
+import org.example.shop.domain.repository.CustomerRepository;
 
-import java.util.NoSuchElementException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CustomerService {

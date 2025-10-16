@@ -36,32 +36,78 @@ public class Product implements MutableIdentifiable<Integer> {
         this.description = description;
     }
 
-    public Product() {}
+    public Product() {
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getCode() {
+        return code;
+    }
 
-    public Float getPrice() { return price; }
-    public void setPrice(Float price) { this.price = price; }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public Float getWeightKg() { return weightKg; }
-    public void setWeightKg(Float weightKg) { this.weightKg = weightKg; }
+    public String getName() {
+        return name;
+    }
 
-    public int getLengthCm() { return lengthCm; }
-    public void setLengthCm(int lengthCm) { this.lengthCm = lengthCm; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public int getWidthCm() { return widthCm; }
-    public void setWidthCm(int widthCm) { this.widthCm = widthCm; }
+    public Float getPrice() {
+        return price;
+    }
 
-    public int getHeightCm() { return heightCm; }
-    public void setHeightCm(int heightCm) { this.heightCm = heightCm; }
+    public void setPrice(Float price) {
+        this.price = price;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Float getWeightKg() {
+        return weightKg;
+    }
+
+    public void setWeightKg(Float weightKg) {
+        this.weightKg = weightKg;
+    }
+
+    public int getLengthCm() {
+        return lengthCm;
+    }
+
+    public void setLengthCm(int lengthCm) {
+        this.lengthCm = lengthCm;
+    }
+
+    public int getWidthCm() {
+        return widthCm;
+    }
+
+    public void setWidthCm(int widthCm) {
+        this.widthCm = widthCm;
+    }
+
+    public int getHeightCm() {
+        return heightCm;
+    }
+
+    public void setHeightCm(int heightCm) {
+        this.heightCm = heightCm;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -15,7 +15,7 @@ public class CartService {
         this.carts = carts;
     }
 
-    public Cart getOrCreate(Integer customerId){
+    public Cart getOrCreate(Integer customerId) {
         return carts.findByCustomerId(customerId).orElseGet(() -> {
             Cart c = new Cart();
             c.setCustomerId(customerId);
@@ -23,11 +23,11 @@ public class CartService {
         });
     }
 
-    public Cart view(Integer customerId){
+    public Cart view(Integer customerId) {
         return getOrCreate(customerId);
     }
 
-    public void add(Integer customerId, Integer productId, int quantity){
+    public void add(Integer customerId, Integer productId, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("quantity <= 0");
         }
@@ -47,7 +47,7 @@ public class CartService {
         carts.save(cart);
     }
 
-    public void set(Integer customerId, Integer productId, int quantity){
+    public void set(Integer customerId, Integer productId, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("quantity <= 0");
         }
@@ -63,13 +63,13 @@ public class CartService {
         carts.save(cart);
     }
 
-    public void remove(Integer customerId, Integer productId){
+    public void remove(Integer customerId, Integer productId) {
         Cart cart = getOrCreate(customerId);
         cart.getItems().removeIf(i -> Objects.equals(i.getProductId(), productId));
         carts.save(cart);
     }
 
-    public void clear(Integer customerId){
+    public void clear(Integer customerId) {
         Cart cart = getOrCreate(customerId);
         cart.getItems().clear();
         carts.save(cart);

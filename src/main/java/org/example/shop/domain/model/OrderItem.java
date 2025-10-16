@@ -24,20 +24,46 @@ public class OrderItem implements MutableIdentifiable<Integer> {
         this.quantity = quantity;
     }
 
-    public OrderItem() {}
+    public OrderItem() {
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getProductId() { return productId; }
-    public void setProductId(Integer productId) { this.productId = productId; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getProductNameSnapshot() { return productNameSnapshot; }
-    public void setProductNameSnapshot(String productNameSnapshot) { this.productNameSnapshot = productNameSnapshot; }
+    public Integer getProductId() {
+        return productId;
+    }
 
-    public Float getUnitPrice() { return unitPrice; }
-    public void setUnitPrice(Float unitPrice) { this.unitPrice = unitPrice; }
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public String getProductNameSnapshot() {
+        return productNameSnapshot;
+    }
+
+    public void setProductNameSnapshot(String productNameSnapshot) {
+        this.productNameSnapshot = productNameSnapshot;
+    }
+
+    public Float getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Float unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

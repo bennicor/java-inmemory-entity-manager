@@ -2,8 +2,9 @@ package org.example.shop.infrastructure.repository;
 
 import org.example.shop.domain.model.Product;
 import org.example.shop.domain.repository.ProductRepository;
-import java.util.Optional;
+
 import java.util.Objects;
+import java.util.Optional;
 
 public class InMemoryProductRepository extends InMemoryGenericRepository<Product>
         implements ProductRepository {

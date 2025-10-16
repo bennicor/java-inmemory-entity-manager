@@ -1,10 +1,10 @@
 package org.example.shop.domain.service;
 
 import org.example.shop.domain.model.*;
-import org.example.shop.domain.repository.CustomerRepository;
-import org.example.shop.domain.repository.ProductRepository;
-import org.example.shop.domain.repository.OrderRepository;
 import org.example.shop.domain.repository.CartRepository;
+import org.example.shop.domain.repository.CustomerRepository;
+import org.example.shop.domain.repository.OrderRepository;
+import org.example.shop.domain.repository.ProductRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package org.example.shop.domain.model;
 
 import org.example.shop.domain.repository.MutableIdentifiable;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,29 +39,70 @@ public class Order implements MutableIdentifiable<Integer> {
         this.items = items;
     }
 
-    public Order() {}
+    public Order() {
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getCustomerId() { return customerId; }
-    public void setCustomerId(Integer customerId) { this.customerId = customerId; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-    public Float getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(Float totalPrice) { this.totalPrice = totalPrice; }
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
-    public Float getDeliveryCost() { return deliveryCost; }
-    public void setDeliveryCost(Float deliveryCost) { this.deliveryCost = deliveryCost; }
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Float getTotalPrice() {
+        return totalPrice;
+    }
 
-    public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setTotalPrice(Float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Float getDeliveryCost() {
+        return deliveryCost;
+    }
+
+    public void setDeliveryCost(Float deliveryCost) {
+        this.deliveryCost = deliveryCost;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }
