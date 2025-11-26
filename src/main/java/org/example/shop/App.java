@@ -4,15 +4,19 @@ import org.example.shop.cli.core.Context;
 import org.example.shop.cli.core.Menu;
 import org.example.shop.cli.core.MenuItem;
 import org.example.shop.cli.core.MenuNavigator;
-import org.example.shop.cli.menu.*;
+import org.example.shop.cli.menu.CartMenu;
+import org.example.shop.cli.menu.CustomerMenu;
+import org.example.shop.cli.menu.MainMenu;
+import org.example.shop.cli.menu.ProductMenu;
+import org.example.shop.cli.menu.OrderMenu;
 import org.example.shop.domain.service.CartService;
 import org.example.shop.domain.service.CustomerService;
 import org.example.shop.domain.service.OrderService;
 import org.example.shop.domain.service.ProductService;
-import org.example.shop.infrastructure.repository.InMemoryCartRepository;
-import org.example.shop.infrastructure.repository.InMemoryCustomerRepository;
-import org.example.shop.infrastructure.repository.InMemoryOrderRepository;
-import org.example.shop.infrastructure.repository.InMemoryProductRepository;
+import org.example.shop.infrastructure.repository.db.pg.PgOrderRepository;
+import org.example.shop.infrastructure.repository.db.pg.PgCustomerRepository;
+import org.example.shop.infrastructure.repository.db.pg.PgCartRepository;
+import org.example.shop.infrastructure.repository.db.pg.PgProductRepository;
 
 import java.util.List;
 import java.util.Scanner;
@@ -20,8 +24,6 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Context ctx = getContext();
-
-        populateWithTestData(ctx);
 
         ProductMenu productMenu = new ProductMenu();
         CustomerMenu customerMenu = new CustomerMenu();
@@ -86,36 +88,16 @@ public class App {
         }
     }
 
-    private static void populateWithTestData
-            (Context ctx) {
-        ctx.products.create("P001", "Phone", 299.99f, 0.3f, 0, 0, 0, "phone");
-        ctx.products.create("P002", "Laptop", 799.99f, 2.3f, 0, 0, 0, "laptop");
-        ctx.products.create("P003", "Tablet", 199.99f, 2.5f, 0, 0, 0, "Its tablet time");
-        ctx.products.create("P004", "Headphones", 59.99f, 1.4f, 0, 0, 0, "Its music time");
-
-        ctx.customers.create("Ivanov", "Ivan", "Ivanovich", "123 Main St", "123456789", "ivanov@email.com");
-        ctx.customers.create("Petrov", "Petr", "Petrovich", "456 Second St", "987654321", "petrov@email.com");
-
-        ctx.carts.add(1, 1, 2);
-        ctx.carts.add(1, 2, 7);
-        ctx.carts.add(1, 3, 4);
-        ctx.carts.add(2, 4, 1);
-        ctx.carts.add(2, 1, 2);
-
-        ctx.orders.createOrderFromCart(1, 20.00f, "CARD");
-        ctx.orders.createOrderFromCart(2, 27.00f, "CASH");
-    }
-
     private static Context getContext() {
-        InMemoryProductRepository productRepo = new InMemoryProductRepository();
-        InMemoryCustomerRepository customerRepo = new InMemoryCustomerRepository();
-        InMemoryCartRepository cartRepo = new InMemoryCartRepository();
-        InMemoryOrderRepository orderRepo = new InMemoryOrderRepository();
+        var productRepo = new PgProductRepository();
+        var customerRepo = new PgCustomerRepository();
+        var cartRepo = new PgCartRepository();
+        var orderRepo = new PgOrderRepository();
 
-        ProductService products = new ProductService(productRepo);
-        CustomerService customers = new CustomerService(customerRepo);
-        CartService carts = new CartService(cartRepo, productRepo);
-        OrderService orders = new OrderService(orderRepo, customerRepo, productRepo, cartRepo);
+        var products = new ProductService(productRepo);
+        var customers = new CustomerService(customerRepo);
+        var carts = new CartService(cartRepo, productRepo);
+        var orders = new OrderService(orderRepo, customerRepo, productRepo, cartRepo);
 
         return new Context(products, customers, carts, orders, new Scanner(System.in));
     }
