@@ -133,7 +133,7 @@ public class PgCustomerRepository extends PgGenericRepository<Customer>
 
             return entity;
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during Ability update operation.", e);
+            throw new RuntimeException("Database error during Customer update operation.", e);
         }
     }
 }

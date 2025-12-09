@@ -7,7 +7,7 @@ import org.example.shop.domain.model.Product;
 public class GetProductCommand implements Command {
     @Override
     public String name() {
-        return "get-product";
+        return "findById-product";
     }
 
     @Override
@@ -17,7 +17,7 @@ public class GetProductCommand implements Command {
 
     @Override
     public String usage() {
-        return "get-product <id>";
+        return "findById-product <id>";
     }
 
     @Override

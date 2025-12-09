@@ -88,7 +88,7 @@ public class OrderService {
 
         Order o = orders.findById(orderId).orElseThrow(() -> new NoSuchElementException("order not found"));
         o.setStatus(status);
-        orders.save(o);
+        orders.update(o);
     }
 
     public List<Order> list() {

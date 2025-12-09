@@ -20,6 +20,11 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
     }
 
     @Override
+    public T update(T entity) {
+        return entity;
+    }
+
+    @Override
     public Optional<T> findById(Integer id) {
         return Optional.ofNullable(storage.get(id));
     }

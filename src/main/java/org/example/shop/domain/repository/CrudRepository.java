@@ -6,6 +6,8 @@ import java.util.Optional;
 public interface CrudRepository<T extends Identifiable<ID>, ID> {
     T save(T entity);
 
+    T update(T entity);
+
     Optional<T> findById(ID id);
 
     List<T> findAll();
