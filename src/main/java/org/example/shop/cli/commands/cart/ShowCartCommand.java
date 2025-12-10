@@ -5,6 +5,8 @@ import org.example.shop.cli.core.Context;
 import org.example.shop.domain.model.Cart;
 import org.example.shop.domain.model.CartItem;
 
+import java.util.Optional;
+
 public class ShowCartCommand implements Command {
     @Override
     public String name() {
@@ -28,7 +30,7 @@ public class ShowCartCommand implements Command {
             return;
         }
 
-        Cart cart = ctx.carts.view(Integer.parseInt(args[1]));
+        Cart cart = ctx.carts.getOrCreate(Integer.parseInt(args[1]));
         if (cart.getItems().isEmpty()) {
             System.out.println("(корзина пуста)");
             return;

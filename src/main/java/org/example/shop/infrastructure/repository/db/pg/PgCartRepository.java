@@ -80,9 +80,8 @@ public class PgCartRepository extends PgGenericRepository<Cart>
             try {
                 if (entity.getId() == null) {
                     insert(conn, entity);
-                } else {
-                    update(conn, entity);
                 }
+
                 deleteItemsByCartId(conn, entity.getId());
                 insertItems(conn, entity);
 
@@ -100,7 +99,7 @@ public class PgCartRepository extends PgGenericRepository<Cart>
     }
 
     private void insert(Connection conn, Cart entity) throws SQLException {
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT_CART)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT_CART, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, entity.getCustomerId());
 
             int affectedRows = pstmt.executeUpdate();
@@ -118,11 +117,20 @@ public class PgCartRepository extends PgGenericRepository<Cart>
         }
     }
 
-    private void update(Connection conn, Cart entity) throws SQLException {
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL_UPDATE_CART)) {
-            pstmt.setInt(1, entity.getCustomerId());
-            pstmt.setInt(2, entity.getId());
-            pstmt.executeUpdate();
+    @Override
+    public Cart update(Cart entity) {
+        if (entity.getId() == null) {
+            throw new IllegalArgumentException("Entity ID must not be null for update operation.");
+        }
+
+        try (Connection conn = Db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_CART)) {
+            ps.setInt(1, entity.getCustomerId());
+            ps.setInt(2, entity.getId());
+            ps.executeUpdate();
+            return entity;
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error during Cart update operation.", e);
         }
     }
 
@@ -137,7 +145,6 @@ public class PgCartRepository extends PgGenericRepository<Cart>
         if (entity.getItems() == null || entity.getItems().isEmpty()) {
             return;
         }
-
 
         try (PreparedStatement ps = conn.prepareStatement(SQL_INSERT_ITEM)) {
             for (CartItem item : entity.getItems()) {
@@ -173,6 +180,29 @@ public class PgCartRepository extends PgGenericRepository<Cart>
         } catch (SQLException e) {
             throw new RuntimeException("Error findById cart", e);
         }
+    }
+
+    @Override
+    public List<Cart> findForPage(int offset, int limit) {
+        List<Cart> carts = new ArrayList<>();
+        String query = "SELECT * FROM cart ORDER BY id LIMIT ? OFFSET ?";
+        try (Connection conn = Db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cart cart = mapRow(rs);
+                    loadItemsForCart(conn, cart);
+                    carts.add(cart);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error findForPage carts", e);
+        }
+
+        return carts;
     }
 
     @Override

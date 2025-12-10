@@ -6,6 +6,10 @@ import org.example.shop.domain.repository.CustomerRepository;
 import org.example.shop.domain.repository.OrderRepository;
 import org.example.shop.domain.repository.ProductRepository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +21,39 @@ public class OrderService {
     private final ProductRepository products;
     private final CartRepository carts;
 
+    private static final String SQL_SELECT_ITEMS_BY_ORDER_ID =
+            "select id, order_id, product_id, product_name_snapshot, " +
+                    "unit_price, quantity from order_item where order_id=?";
+
     public OrderService(OrderRepository orders, CustomerRepository customers,
                         ProductRepository products, CartRepository carts) {
         this.orders = orders;
         this.customers = customers;
         this.products = products;
         this.carts = carts;
+    }
+
+    private OrderItem mapRowItem(ResultSet rs) throws SQLException {
+        OrderItem item = new OrderItem();
+        item.setId(rs.getInt("id"));
+        item.setProductId(rs.getInt("product_id"));
+        item.setProductNameSnapshot(rs.getString("product_name_snapshot"));
+        item.setUnitPrice(rs.getFloat("unit_price"));
+        item.setQuantity(rs.getInt("quantity"));
+        return item;
+    }
+
+    private void loadItemsForOrder(Connection conn, Order order) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(SQL_SELECT_ITEMS_BY_ORDER_ID)) {
+            ps.setInt(1, order.getId());
+            try (ResultSet rs = ps.executeQuery()) {
+                List<OrderItem> items = new ArrayList<>();
+                while (rs.next()) {
+                    items.add(mapRowItem(rs));
+                }
+                order.setItems(items);
+            }
+        }
     }
 
     public Order createOrderFromCart(Integer customerId, Float deliveryCost, String paymentMethod) {
@@ -88,7 +119,11 @@ public class OrderService {
 
         Order o = orders.findById(orderId).orElseThrow(() -> new NoSuchElementException("order not found"));
         o.setStatus(status);
-        orders.save(o);
+        orders.update(o);
+    }
+
+    public List<Order> selectOrdersForPage(int offset, int limit) {
+        return orders.findForPage(offset, limit);
     }
 
     public List<Order> list() {

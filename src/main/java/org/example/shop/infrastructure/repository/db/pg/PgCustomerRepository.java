@@ -5,6 +5,8 @@ import org.example.shop.domain.repository.CustomerRepository;
 import org.example.shop.infrastructure.repository.db.Db;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PgCustomerRepository extends PgGenericRepository<Customer>
@@ -115,6 +117,26 @@ public class PgCustomerRepository extends PgGenericRepository<Customer>
         return Optional.empty();
     }
 
+    public List<Customer> findForPage(int offset, int limit) {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT * FROM customer ORDER BY id LIMIT ? OFFSET ?";
+        try (Connection conn = Db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    customers.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
+
     public Customer update(Customer entity) {
         if (entity.getId() == null) {
             throw new IllegalArgumentException("Entity ID must not be null for update operation.");
@@ -133,7 +155,7 @@ public class PgCustomerRepository extends PgGenericRepository<Customer>
 
             return entity;
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during Ability update operation.", e);
+            throw new RuntimeException("Database error during Customer update operation.", e);
         }
     }
 }

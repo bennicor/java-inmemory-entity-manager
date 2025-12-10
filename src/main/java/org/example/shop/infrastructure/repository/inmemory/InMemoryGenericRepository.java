@@ -20,6 +20,11 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
     }
 
     @Override
+    public T update(T entity) {
+        return entity;
+    }
+
+    @Override
     public Optional<T> findById(Integer id) {
         return Optional.ofNullable(storage.get(id));
     }
@@ -27,6 +32,11 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
     @Override
     public List<T> findAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    @Override
+    public List<T> findForPage(int offset, int limit) {
+        return new ArrayList<>();
     }
 
     @Override

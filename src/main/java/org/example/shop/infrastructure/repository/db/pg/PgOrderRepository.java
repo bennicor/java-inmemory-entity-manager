@@ -107,11 +107,7 @@ public class PgOrderRepository extends PgGenericRepository<Order>
             conn.setAutoCommit(false);
 
             try {
-                if (entity.getId() == null) {
-                    insert(conn, entity);
-                } else {
-                    update(conn, entity);
-                }
+                insert(conn, entity);
 
                 insertItems(conn, entity);
 
@@ -149,8 +145,14 @@ public class PgOrderRepository extends PgGenericRepository<Order>
         }
     }
 
-    private void update(Connection conn, Order entity) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_ORDER)) {
+    @Override
+    public Order update(Order entity) {
+        if (entity.getId() == null) {
+            throw new IllegalArgumentException("Entity ID must not be null for update operation.");
+        }
+
+        try (Connection conn = Db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_ORDER)) {
             ps.setInt(1, entity.getCustomerId());
 
             LocalDateTime dt = entity.getOrderDate();
@@ -161,6 +163,9 @@ public class PgOrderRepository extends PgGenericRepository<Order>
             ps.setString(5, entity.getStatus());
             ps.setInt(6, entity.getId());
             ps.executeUpdate();
+            return entity;
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error during Order update operation.", e);
         }
     }
 
@@ -223,6 +228,29 @@ public class PgOrderRepository extends PgGenericRepository<Order>
             throw new RuntimeException("Error findAll orders", e);
         }
         return result;
+    }
+
+    @Override
+    public List<Order> findForPage(int offset, int limit) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM \"order\" ORDER BY id LIMIT ? OFFSET ?";
+        try (Connection conn = Db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Order order = mapRow(rs);
+                    loadItemsForOrder(conn, order);
+                    orders.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orders;
     }
 
     @Override

@@ -27,11 +27,11 @@ public class CartService {
         });
     }
 
-    public Cart view(Integer customerId) {
-        return getOrCreate(customerId);
+    public void add(Integer customerId, Integer productId, int quantity) {
+        add(customerId, productId, quantity, false);
     }
 
-    public void add(Integer customerId, Integer productId, int quantity) {
+    public void add(Integer customerId, Integer productId, int quantity, boolean reducing) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("quantity <= 0");
         }
@@ -43,7 +43,20 @@ public class CartService {
         Optional<CartItem> existing = items.stream().filter(i -> Objects.equals(i.getProductId(), productId)).findFirst();
 
         if (existing.isPresent()) {
-            existing.get().setQuantity(existing.get().getQuantity() + quantity);
+            CartItem item = existing.get();
+            int currQuantity = item.getQuantity();
+
+            if (reducing) {
+                currQuantity -= quantity;
+            } else {
+                currQuantity += quantity;
+            }
+
+            if (currQuantity <= 0) {
+                cart = remove(customerId, productId);
+            } else {
+                item.setQuantity(currQuantity);
+            }
         } else {
             CartItem ci = new CartItem();
             ci.setProductId(productId);
@@ -53,12 +66,21 @@ public class CartService {
         carts.save(cart);
     }
 
-    public void remove(Integer customerId, Integer productId) {
+    public List<Cart> list() {
+        return carts.findAll();
+    }
+
+    public List<Cart> selectCartsForPage(int offset, int limit) {
+        return carts.findForPage(offset, limit);
+    }
+
+    public Cart remove(Integer customerId, Integer productId) {
         products.findById(productId).orElseThrow(() -> new NoSuchElementException("product not found: " + productId));
 
         Cart cart = getOrCreate(customerId);
         cart.getItems().removeIf(i -> Objects.equals(i.getProductId(), productId));
         carts.save(cart);
+        return cart;
     }
 
     public void clear(Integer customerId) {
