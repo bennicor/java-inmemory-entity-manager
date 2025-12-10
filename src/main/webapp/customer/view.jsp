@@ -16,6 +16,6 @@
 <p><b>Email:</b> ${customer.email}</p>
 <p><b>Адрес:</b> ${customer.address}</p>
 
-<a href="customers">Назад к списку</a>
+<a href="customers?page=${param.page}">Назад к списку</a>
 </body>
 </html>

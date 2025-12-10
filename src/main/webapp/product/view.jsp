@@ -27,6 +27,6 @@
     <input type="submit" value="Добавить">
 </form>
 
-<a href="products">Назад к списку</a>
+<a href="products?page=${param.page}">Назад к списку</a>
 </body>
 </html>

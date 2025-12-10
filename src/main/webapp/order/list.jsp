@@ -31,7 +31,7 @@
             <td>${order.paymentMethod}</td>
             <td>${order.status}</td>
             <td>
-                <form action="${pageContext.request.contextPath}/orders" method="post">
+                <form action="${pageContext.request.contextPath}/orders?page=${currentPage}" method="post">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="orderId" value="${order.id}">
                     <select name="status">
@@ -45,10 +45,23 @@
                 </form>
             </td>
             <td>
-                <a href="orders?action=view&id=${order.id}">Подробнее</a>
+                <a href="orders?action=view&id=${order.id}&page=${currentPage}">Подробнее</a>
             </td>
         </tr>
     </c:forEach>
 </table>
+<br><br>
+
+<div>
+    <c:if test="${currentPage > 1}">
+        <a href="orders?page=${currentPage - 1}">Предыдущая</a>
+    </c:if>
+
+    <span>Страница ${currentPage} из ${totalPages}</span>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="orders?page=${currentPage + 1}">Следующая</a>
+    </c:if>
+</div>
 </body>
 </html>

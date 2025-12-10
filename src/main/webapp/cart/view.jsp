@@ -38,7 +38,7 @@
             <td>${item.product.weightKg}</td>
             <td>${item.product.description}</td>
             <td>${item.quantity}</td>
-            <td>${item.quantity * item.product.price} руб.</td>
+            <td>${item.lineCost} руб.</td>
             <td>
                 <form action="${pageContext.request.contextPath}/carts" method="post">
                     <input type="hidden" name="action" value="add">
@@ -87,8 +87,8 @@
     <input type="submit" value="Заказать">
 </form>
 <h3>Итоговая стоимость(без доставки): ${totalCost} руб.</h3>
-<h3>Итоговая стоимость(с учетом доставки): ${totalCost + deliveryCost} руб.</h3>
+<h3>Итоговая стоимость(с учетом доставки): ${totalCostWithDelivery} руб.</h3>
 <br>
-<a href="carts">Назад к списку</a>
+<a href="carts?&page=${param.page}">Назад к списку</a>
 </body>
 </html>

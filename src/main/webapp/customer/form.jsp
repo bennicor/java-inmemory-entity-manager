@@ -23,7 +23,7 @@
 </form>
 
 <br>
-<a href="${pageContext.request.contextPath}/customers?action=list">Назад</a>
+<a href="${pageContext.request.contextPath}/customers?page=${param.page}">Назад</a>
 
 </body>
 </html>

@@ -93,6 +93,10 @@ public class CustomerService {
         return customer.get();
     }
 
+    public List<Customer> selectCustomersForPage(int offset, int limit) {
+        return customers.findForPage(offset, limit);
+    }
+
     public void remove(Integer id) {
         Optional<Customer> customer = customers.findById(id);
         if (customer.isEmpty()) {

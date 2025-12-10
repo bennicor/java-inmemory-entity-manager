@@ -231,6 +231,29 @@ public class PgOrderRepository extends PgGenericRepository<Order>
     }
 
     @Override
+    public List<Order> findForPage(int offset, int limit) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM \"order\" ORDER BY id LIMIT ? OFFSET ?";
+        try (Connection conn = Db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Order order = mapRow(rs);
+                    loadItemsForOrder(conn, order);
+                    orders.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+
+    @Override
     public List<Order> findByCustomerId(Integer customerId) {
         List<Order> result = new ArrayList<>();
         try (Connection conn = Db.getConnection();

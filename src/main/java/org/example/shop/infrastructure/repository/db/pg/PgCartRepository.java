@@ -183,6 +183,29 @@ public class PgCartRepository extends PgGenericRepository<Cart>
     }
 
     @Override
+    public List<Cart> findForPage(int offset, int limit) {
+        List<Cart> carts = new ArrayList<>();
+        String query = "SELECT * FROM cart ORDER BY id LIMIT ? OFFSET ?";
+        try (Connection conn = Db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cart cart = mapRow(rs);
+                    loadItemsForCart(conn, cart);
+                    carts.add(cart);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error findForPage carts", e);
+        }
+
+        return carts;
+    }
+
+    @Override
     public List<Cart> findAll() {
         List<Cart> result = new ArrayList<>();
         try (Connection conn = Db.getConnection();

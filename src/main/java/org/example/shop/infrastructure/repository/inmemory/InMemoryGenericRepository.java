@@ -35,6 +35,11 @@ public class InMemoryGenericRepository<T extends MutableIdentifiable<Integer>>
     }
 
     @Override
+    public List<T> findForPage(int offset, int limit) {
+        return new ArrayList<>();
+    }
+
+    @Override
     public boolean exists(Integer id) {
         return storage.containsKey(id);
     }

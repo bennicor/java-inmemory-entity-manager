@@ -101,6 +101,10 @@ public class ProductService {
         return product.get();
     }
 
+    public List<Product> selectProductsForPage(int offset, int limit) {
+        return products.findForPage(offset, limit);
+    }
+
     public void remove(Integer id) {
         Optional<Product> product = products.findById(id);
         if (product.isEmpty()) {

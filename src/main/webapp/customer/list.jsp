@@ -8,6 +8,7 @@
 <body>
 <a href="/store">На главную</a>
 <br>
+<a href="customers?action=new">Добавить пользователя</a>
 
 <h1>Список пользователей</h1>
 <table border="1" cellpadding="6">
@@ -19,6 +20,7 @@
         <th>Номер телефона</th>
         <th>Email</th>
         <th>Адрес</th>
+        <th>Управление</th>
     </tr>
         <c:forEach var="customer" items="${customers}">
             <tr>
@@ -30,16 +32,26 @@
                 <td>${customer.email}</td>
                 <td>${customer.address}</td>
                 <td>
-                    <a href="customers?action=view&id=${customer.id}">Подробнее</a> |
-                    <a href="customers?action=edit&id=${customer.id}">Редактировать</a> |
-                    <a href="customers?action=remove&id=${customer.id}">Удалить</a>
+                    <a href="customers?action=view&id=${customer.id}&page=${currentPage}">Подробнее</a> |
+                    <a href="customers?action=edit&id=${customer.id}&page=${currentPage}">Редактировать</a> |
+                    <a href="customers?action=remove&id=${customer.id}&page=${currentPage}">Удалить</a>
                 </td>
             </tr>
         </c:forEach>
 </table>
 
 <br><br>
-<a href="customers?action=new">Добавить пользователя</a>
 
+<div>
+    <c:if test="${currentPage > 1}">
+        <a href="customers?page=${currentPage - 1}">Предыдущая</a>
+    </c:if>
+
+    <span>Страница ${currentPage} из ${totalPages}</span>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="customers?page=${currentPage + 1}">Следующая</a>
+    </c:if>
+</div>
 </body>
 </html>

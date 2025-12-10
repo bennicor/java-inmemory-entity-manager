@@ -122,6 +122,10 @@ public class OrderService {
         orders.update(o);
     }
 
+    public List<Order> selectOrdersForPage(int offset, int limit) {
+        return orders.findForPage(offset, limit);
+    }
+
     public List<Order> list() {
         return orders.findAll();
     }

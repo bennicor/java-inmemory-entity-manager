@@ -37,7 +37,7 @@
             <td>${item.product.weightKg}</td>
             <td>${item.product.description}</td>
             <td>${item.quantity}</td>
-            <td>${item.quantity * item.priceSnapshot} руб.</td>
+            <td>${item.lineCost} руб.</td>
             <td>
                 <a href="products?action=view&id=${item.product.id}">Подробнее</a>
             </td>
@@ -46,9 +46,9 @@
 </table>
 
 <h3>Стоимость доставки: ${order.deliveryCost} руб.</h3>
-<h3>Итоговая стоимость(с учетом доставки): ${totalCost + deliveryCost} руб.</h3>
+<h3>Итоговая стоимость(с учетом доставки): ${totalCostWithDelivery} руб.</h3>
 
 <br>
-<a href="orders">Назад к списку</a>
+<a href="orders?page=${param.page}">Назад к списку</a>
 </body>
 </html>

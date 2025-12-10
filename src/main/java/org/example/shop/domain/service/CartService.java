@@ -70,6 +70,10 @@ public class CartService {
         return carts.findAll();
     }
 
+    public List<Cart> selectCartsForPage(int offset, int limit) {
+        return carts.findForPage(offset, limit);
+    }
+
     public Cart remove(Integer customerId, Integer productId) {
         products.findById(productId).orElseThrow(() -> new NoSuchElementException("product not found: " + productId));
 

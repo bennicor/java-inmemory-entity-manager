@@ -24,7 +24,7 @@
 </form>
 
 <br>
-<a href="${pageContext.request.contextPath}/product?action=list">Назад</a>
+<a href="${pageContext.request.contextPath}/products?page=${param.page}">Назад</a>
 
 </body>
 </html>

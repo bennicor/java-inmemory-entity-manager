@@ -8,6 +8,7 @@
 <body>
 <a href="/store">На главную</a>
 <br>
+<a href="products?action=new">Добавить товар</a>
 
 <h1>Список товаров</h1>
 <table border="1" cellpadding="6">
@@ -45,16 +46,27 @@
                     </form>
                 </td>
                 <td>
-                    <a href="products?action=view&id=${product.id}">Подробнее</a> |
-                    <a href="products?action=edit&id=${product.id}">Редактировать</a> |
-                    <a href="products?action=remove&id=${product.id}">Удалить</a>
+                    <a href="products?action=view&id=${product.id}&page=${currentPage}">Подробнее</a> |
+                    <a href="products?action=edit&id=${product.id}&page=${currentPage}">Редактировать</a> |
+                    <a href="products?action=remove&id=${product.id}&page=${currentPage}">Удалить</a>
                 </td>
             </tr>
         </c:forEach>
 </table>
 
 <br><br>
-<a href="products?action=new">Добавить товар</a>
+
+<div>
+    <c:if test="${currentPage > 1}">
+        <a href="products?page=${currentPage - 1}">Предыдущая</a>
+    </c:if>
+
+    <span>Страница ${currentPage} из ${totalPages}</span>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="products?page=${currentPage + 1}">Следующая</a>
+    </c:if>
+</div>
 
 </body>
 </html>

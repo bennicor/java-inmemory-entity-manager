@@ -23,11 +23,24 @@
                 <td>${cart.customerId}</td>
                 <td>${cart.items.size()}</td>
                 <td>
-                    <a href="carts?action=view&id=${cart.customerId}">Подробнее</a>
+                    <a href="carts?action=view&id=${cart.customerId}&page=${currentPage}">Подробнее</a>
                 </td>
             </tr>
         </c:forEach>
 </table>
+<br><br>
+
+<div>
+    <c:if test="${currentPage > 1}">
+        <a href="carts?page=${currentPage - 1}">Предыдущая</a>
+    </c:if>
+
+    <span>Страница ${currentPage} из ${totalPages}</span>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="carts?page=${currentPage + 1}">Следующая</a>
+    </c:if>
+</div>
 
 </body>
 </html>

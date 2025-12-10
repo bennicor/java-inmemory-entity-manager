@@ -6,7 +6,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.shop.domain.model.*;
+import org.example.shop.AppConfig;
+import org.example.shop.domain.model.Order;
+import org.example.shop.domain.model.OrderItem;
+import org.example.shop.domain.model.Product;
 import org.example.shop.domain.service.OrderService;
 import org.example.shop.domain.service.ProductService;
 import org.example.shop.infrastructure.repository.db.Db;
@@ -17,6 +20,7 @@ import org.example.shop.infrastructure.repository.db.pg.PgProductRepository;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +63,26 @@ public class OrderServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Order> orders = orderService.list();
+            int page = 1;
+            String pageParam = req.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Page value must not be null");
+                }
+            }
+
+            int offset = (page - 1) * AppConfig.PRODUCTS_PER_PAGE;
+
+            int totalProducts = orderService.list().size();
+            int totalPages = (int) Math.ceil((double) totalProducts / AppConfig.PRODUCTS_PER_PAGE);
+
+            List<Order> orders = orderService.selectOrdersForPage(offset, AppConfig.PRODUCTS_PER_PAGE);
+
             req.setAttribute("orders", orders);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
             req.getRequestDispatcher("/order/list.jsp").forward(req, resp);
         } else if (action.equals("view")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
@@ -70,6 +92,8 @@ public class OrderServlet extends HttpServlet {
 
             List<Map<String, Object>> orderDetails = new ArrayList<>();
             double totalCost = 0;
+            DecimalFormat df = new DecimalFormat("#.##");
+
             for (OrderItem item : items) {
                 Map<String, Object> orderItemDetails = new HashMap<>();
 
@@ -80,14 +104,17 @@ public class OrderServlet extends HttpServlet {
                 orderItemDetails.put("nameSnapshot", item.getProductNameSnapshot());
                 orderItemDetails.put("priceSnapshot", item.getUnitPrice());
 
-                totalCost += item.getUnitPrice() * item.getQuantity();
+                String lineCost = df.format(product.getPrice() * item.getQuantity());
+                orderItemDetails.put("lineCost", lineCost);
+                totalCost += Double.parseDouble(lineCost);
                 orderDetails.add(orderItemDetails);
             }
 
             req.setAttribute("order", order);
             req.setAttribute("orderDetails", orderDetails);
             req.setAttribute("deliveryCost", order.getDeliveryCost());
-            req.setAttribute("totalCost", totalCost);
+            req.setAttribute("totalCost", df.format(totalCost));
+            req.setAttribute("totalCostWithDelivery", df.format(totalCost + order.getDeliveryCost()));
             req.getRequestDispatcher("/order/view.jsp").forward(req, resp);
         }
     }
@@ -109,7 +136,7 @@ public class OrderServlet extends HttpServlet {
                     Integer.parseInt(req.getParameter("orderId")),
                     req.getParameter("status")
             );
-            resp.sendRedirect("orders");
+            resp.sendRedirect("orders?page=" + req.getParameter("page"));
         }
     }
 }

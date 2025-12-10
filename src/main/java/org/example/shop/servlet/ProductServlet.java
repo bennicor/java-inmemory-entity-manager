@@ -1,16 +1,16 @@
 package org.example.shop.servlet;
 
-import org.example.shop.domain.model.Product;
-import org.example.shop.domain.service.CartService;
-import org.example.shop.domain.service.ProductService;
-import org.example.shop.infrastructure.repository.db.Db;
-
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.shop.AppConfig;
+import org.example.shop.domain.model.Product;
+import org.example.shop.domain.service.CartService;
+import org.example.shop.domain.service.ProductService;
+import org.example.shop.infrastructure.repository.db.Db;
 import org.example.shop.infrastructure.repository.db.pg.PgCartRepository;
 import org.example.shop.infrastructure.repository.db.pg.PgProductRepository;
 
@@ -56,13 +56,31 @@ public class ProductServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Product> products = productService.list();
+            int page = 1;
+            String pageParam = req.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Page value must not be null");
+                }
+            }
+
+            int offset = (page - 1) * AppConfig.PRODUCTS_PER_PAGE;
+
+            int totalProducts = productService.list().size();
+            int totalPages = (int) Math.ceil((double) totalProducts / AppConfig.PRODUCTS_PER_PAGE);
+
+            List<Product> products = productService.selectProductsForPage(offset, AppConfig.PRODUCTS_PER_PAGE);
+
             req.setAttribute("products", products);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
             req.getRequestDispatcher("/product/list.jsp").forward(req, resp);
         } else if (action.equals("remove")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             productService.remove(id);
-            resp.sendRedirect("products");
+            resp.sendRedirect("products?page=" + req.getParameter("page"));
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/product/form.jsp").forward(req, resp);
         } else if (action.equals("view")) {

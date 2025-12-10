@@ -1,16 +1,16 @@
 package org.example.shop.servlet;
 
-import org.example.shop.domain.model.Customer;
-import org.example.shop.domain.service.CartService;
-import org.example.shop.domain.service.CustomerService;
-import org.example.shop.infrastructure.repository.db.Db;
-
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.shop.AppConfig;
+import org.example.shop.domain.model.Customer;
+import org.example.shop.domain.service.CartService;
+import org.example.shop.domain.service.CustomerService;
+import org.example.shop.infrastructure.repository.db.Db;
 import org.example.shop.infrastructure.repository.db.pg.PgCartRepository;
 import org.example.shop.infrastructure.repository.db.pg.PgCustomerRepository;
 import org.example.shop.infrastructure.repository.db.pg.PgProductRepository;
@@ -56,13 +56,31 @@ public class CustomerServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Customer> customers = customerService.list();
+            int page = 1;
+            String pageParam = req.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Page value must not be null");
+                }
+            }
+
+            int offset = (page - 1) * AppConfig.PRODUCTS_PER_PAGE;
+
+            int totalProducts = customerService.list().size();
+            int totalPages = (int) Math.ceil((double) totalProducts / AppConfig.PRODUCTS_PER_PAGE);
+
+            List<Customer> customers = customerService.selectCustomersForPage(offset, AppConfig.PRODUCTS_PER_PAGE);
+
             req.setAttribute("customers", customers);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
             req.getRequestDispatcher("/customer/list.jsp").forward(req, resp);
         } else if (action.equals("remove")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             customerService.remove(id);
-            resp.sendRedirect("customers");
+            resp.sendRedirect("customers?page=" + req.getParameter("page"));
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/customer/form.jsp").forward(req, resp);
         } else if (action.equals("view")) {
@@ -81,7 +99,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-
         String action = req.getParameter("action");
         if (action.equals("edit")) {
             customerService.update(
