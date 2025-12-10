@@ -6,12 +6,9 @@ import org.example.shop.domain.repository.CustomerRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 public class CustomerService {
     private final CustomerRepository customers;
-
-    private static final Logger LOGGER = Logger.getLogger(CustomerService.class.getName());
 
     public CustomerService(CustomerRepository customers) {
         this.customers = customers;

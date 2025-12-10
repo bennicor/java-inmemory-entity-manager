@@ -99,7 +99,7 @@ public class PgCartRepository extends PgGenericRepository<Cart>
     }
 
     private void insert(Connection conn, Cart entity) throws SQLException {
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT_CART)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT_CART, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, entity.getCustomerId());
 
             int affectedRows = pstmt.executeUpdate();

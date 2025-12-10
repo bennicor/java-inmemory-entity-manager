@@ -4,6 +4,9 @@
 <html>
 <head><title>Информация о пользователе</title></head>
 <body>
+<a href="/store">На главную</a>
+<br>
+
 <h1>Информация о пользователе</h1>
 <p><b>ID:</b> ${customer.id}</p>
 <p><b>Имя:</b> ${customer.firstName}</p>

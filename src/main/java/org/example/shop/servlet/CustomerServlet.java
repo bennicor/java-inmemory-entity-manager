@@ -1,6 +1,7 @@
 package org.example.shop.servlet;
 
 import org.example.shop.domain.model.Customer;
+import org.example.shop.domain.service.CartService;
 import org.example.shop.domain.service.CustomerService;
 import org.example.shop.infrastructure.repository.db.Db;
 
@@ -10,7 +11,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.shop.infrastructure.repository.db.pg.PgCartRepository;
 import org.example.shop.infrastructure.repository.db.pg.PgCustomerRepository;
+import org.example.shop.infrastructure.repository.db.pg.PgProductRepository;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class CustomerServlet extends HttpServlet {
     private Connection conn;
     private CustomerService customerService;
+    private CartService cartService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -28,6 +32,7 @@ public class CustomerServlet extends HttpServlet {
         try {
             conn = Db.getConnection();
             customerService = new CustomerService(new PgCustomerRepository());
+            cartService = new CartService(new PgCartRepository(), new PgProductRepository());
         } catch (Exception e) {
             throw new ServletException("Failed to initialize CustomerServlet: " + e.getMessage(), e);
         }
@@ -89,7 +94,7 @@ public class CustomerServlet extends HttpServlet {
                     req.getParameter("address")
             );
         } else if (action.equals("new")) {
-            customerService.create(
+            Customer customer = customerService.create(
                     req.getParameter("firstName"),
                     req.getParameter("middleName"),
                     req.getParameter("lastName"),
@@ -97,6 +102,7 @@ public class CustomerServlet extends HttpServlet {
                     req.getParameter("email"),
                     req.getParameter("address")
             );
+            cartService.getOrCreate(customer.getId());
         }
 
         resp.sendRedirect("customers");

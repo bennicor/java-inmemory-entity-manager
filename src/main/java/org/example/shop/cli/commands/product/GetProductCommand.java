@@ -27,7 +27,7 @@ public class GetProductCommand implements Command {
             return;
         }
 
-        Product p = ctx.products.get(Integer.parseInt(args[1]));
+        Product p = ctx.products.findById(Integer.parseInt(args[1]));
         System.out.println("Найден товар id=" + p.getId() + " | " + p.getCode() + " | " + p.getName());
     }
 }

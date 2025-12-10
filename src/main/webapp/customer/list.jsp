@@ -6,6 +6,9 @@
     <title>Список пользователей</title>
 </head>
 <body>
+<a href="/store">На главную</a>
+<br>
+
 <h1>Список пользователей</h1>
 <table border="1" cellpadding="6">
     <tr>
