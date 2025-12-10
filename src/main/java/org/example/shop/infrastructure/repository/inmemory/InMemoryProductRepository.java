@@ -1,4 +1,4 @@
-package org.example.shop.infrastructure.repository;
+package org.example.shop.infrastructure.repository.inmemory;
 
 import org.example.shop.domain.model.Product;
 import org.example.shop.domain.repository.ProductRepository;
