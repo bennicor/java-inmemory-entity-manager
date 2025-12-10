@@ -122,6 +122,6 @@ public class CustomerServlet extends HttpServlet {
             cartService.getOrCreate(customer.getId());
         }
 
-        resp.sendRedirect("customers");
+        resp.sendRedirect("customers?page=" + req.getParameter("page"));
     }
 }
